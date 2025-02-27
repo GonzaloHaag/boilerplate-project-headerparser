@@ -25,8 +25,11 @@ app.get('/api/hello', function (req, res) {
 });
 //{"ipaddress":"159.20.14.100","language":"en-US,en;q=0.5","software":"Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:50.0) Gecko/20100101 Firefox/50.0"}
 app.get('/api/whoami',(req,res) => {
+  const ip = req.headers['x-forwarded-for']?.split(',')[0].trim() || req.socket.remoteAddress;
+  const language = req.headers['accept-language'];
+  const software = req.headers['user-agent'];
 
-  return res.json({"ipaddress":req.ip.split(',')[0].trim(),"language":req.headers["accept-language"],"software":req.headers["user-agent"]})
+  return res.json({ipaddress:ip,language,software});
 })
 
 // listen for requests :)
